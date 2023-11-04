@@ -4,6 +4,7 @@ const AuthForm = () => {
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -14,6 +15,8 @@ const AuthForm = () => {
 
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
+
+    setIsLoading(true);
 
     if (isLogin) {
     } else {
@@ -31,6 +34,8 @@ const AuthForm = () => {
           },
         }
       ).then((res) => {
+        setIsLoading(false);
+
         if (res.ok) {
           // On Registration successful
           emailInputRef.current.value = "";
@@ -38,7 +43,12 @@ const AuthForm = () => {
         } else {
           return res.json().then((data) => {
             // Show error modal
-            console.log(data);
+
+            // const errorMessage = "Authentication Failed!";
+            if (data && data.error && data.error.message) {
+              const errorMessage = data.error.message;
+              alert(errorMessage);
+            }
           });
         }
       });
@@ -79,9 +89,12 @@ const AuthForm = () => {
                 />
               </div>
               <div className="d-grid">
-                <button className="btn btn-primary">
-                  {isLogin ? "Login" : "Create Account"}
-                </button>
+                {!isLoading && (
+                  <button className="btn btn-primary">
+                    {isLogin ? "Login" : "Create Account"}
+                  </button>
+                )}
+                {isLoading && <p>Sending Request...</p>}
               </div>
               <div className="text-center mt-3">
                 <button
