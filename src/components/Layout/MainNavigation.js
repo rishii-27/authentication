@@ -1,6 +1,12 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import AuthContext from "../../Store/auth-context";
 
 const MainNavigation = () => {
+  const authCtx = useContext(AuthContext);
+
+  const isLoggedIn = authCtx.isLoggedIn;
+
   return (
     <div className="container">
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -24,19 +30,25 @@ const MainNavigation = () => {
             id="navbarNav"
           >
             <ul className="navbar-nav">
-              <li className="nav-item mr-3">
-                <Link to="/auth" className="nav-link">
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item mr-3">
-                <Link to="/profile" className="nav-link">
-                  Profile
-                </Link>
-              </li>
-              <li className="nav-item">
-                <button className="btn btn-primary">Logout</button>
-              </li>
+              {!isLoggedIn && (
+                <li className="nav-item mr-3">
+                  <Link to="/auth" className="nav-link">
+                    Login
+                  </Link>
+                </li>
+              )}
+              {isLoggedIn && (
+                <li className="nav-item mr-3">
+                  <Link to="/profile" className="nav-link">
+                    Profile
+                  </Link>
+                </li>
+              )}
+              {isLoggedIn && (
+                <li className="nav-item">
+                  <button className="btn btn-primary">Logout</button>
+                </li>
+              )}
             </ul>
           </div>
         </div>
